@@ -10,10 +10,10 @@ async function registerPassenger(req, res) {
 
 async function getPassengerTravels(req, res) {
   try {
-    await //função
+    //await
     res.status(200).send("getPassenger");
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
     return res.sendStatus(500);
   }
 }
