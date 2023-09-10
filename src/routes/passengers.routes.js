@@ -1,12 +1,18 @@
-import { Router } from "express"
-import { registerPassenger, showPassengerTravels } from "../controllers/passengers.controller.js"
-import { validateSchema } from "../middlewares/validateSchema.js"
-import { passengerSchema } from "../schemas/passengerSchemas.js"
+import { Router } from "express";
+import { passengerController } from "../controllers/passengers.controller.js";
+import { validateSchema } from "../middlewares/validateSchema.js";
+import { passengerSchema } from "../schemas/passengerSchemas.js";
 
-const passengersRouter = Router()
+const passengersRouter = Router();
 
+passengersRouter.post(
+  "/passengers",
+  validateSchema(passengerSchema),
+  passengerController.registerPassenger
+);
+passengersRouter.get(
+  "/passengers/travels",
+  passengerController.getPassengerTravels
+);
 
-passengersRouter.post("/passengers", validateSchema(passengerSchema), registerPassenger)
-passengersRouter.get("/passengers/travels", showPassengerTravels)
-
-export default passengersRouter
+export default passengersRouter;
