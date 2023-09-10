@@ -1,14 +1,14 @@
 import httpStatus from "http-status";
-import { passengerService } from "../services/passengerService.js";
+import { passengerService } from "../services/passengers.service.js";
 import { errors } from "../errors/errors.js";
 
-export async function registerPassenger(req, res) {
+async function registerPassenger(req, res) {
   if (!req.body) throw errors.incompleteData();
   await passengerService.createPassenger(req.body);
   res.sendStatus(httpStatus.CREATED);
 }
 
-export async function getPassengerTravels(req, res) {
+async function getPassengerTravels(req, res) {
   try {
     await //função
     res.status(200).send("getPassenger");
