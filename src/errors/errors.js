@@ -5,6 +5,14 @@ function incompleteData() {
   };
 }
 
+function incompleteDates() {
+  return {
+    type: "unprocessableEntityDate",
+    message:
+      "Os parâmetros bigger-date e smaller-date devem ser passados juntos.",
+  };
+}
+
 function invalidSchema(errors) {
   return {
     type: "unprocessableEntity",
@@ -53,13 +61,38 @@ function notFoundFlight() {
   };
 }
 
+function manyResults() {
+  return {
+    type: "manyResults",
+    message: "Muitos resultados",
+  };
+}
+
+function invalidFormatDate(date) {
+  return {
+    type: "invalidFormatDate",
+    message: "As datas devem estar no formato DD-MM-AAAA.",
+  };
+}
+
+function inconsistentDates() {
+  return {
+    type: "inconsistentDates",
+    message: `A bigger-date deve ser maior ou igual à smaller-date.`,
+  };
+}
+
 export const errors = {
   incompleteData,
+  incompleteDates,
   invalidSchema,
   conflictCity,
   conflictCities,
   invalidDate,
+  invalidFormatDate,
+  inconsistentDates,
   notFoundCities,
   notFoundPassenger,
   notFoundFlight,
+  manyResults,
 };
