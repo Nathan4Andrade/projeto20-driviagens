@@ -18,4 +18,56 @@ async function createFlight({ origin, destination, date }) {
   return flightRepository.createFlight(origin, destination, date);
 }
 
+async function selectFlights(origin, destination, biggerDate, smallerDate) {
+  if (origin && !destination && !biggerDate && !smallerDate) {
+    const flights = await flightRepository.selectFlightsByOrigin(origin);
+    return flights.rows;
+  }
+  if (!origin && destination && !biggerDate && !smallerDate) {
+    const flights = await flightRepository.selectFlightsByDestination(
+      destination
+    );
+    return flights.rows;
+  }
+  if ((!biggerDate && smallerDate) || (biggerDate && !smallerDate))
+    throw errors.incompleteData();
+
+  if (biggerDate && smallerDate) {
+    const isFormattedBiggerDate = formatDate(biggerDate);
+    const isFormattedSmallerDate = formatDate(smallerDate);
+
+    if (!isFormattedBiggerDate || !isFormattedSmallerDate)
+      throw errors.invalidFormatDate();
+
+    const biggerDateDesconverted = desconvertDate(biggerDate);
+    const smallerDateDesconverted = desconvertDate(smallerDate);
+
+    if (smallerDateDesconverted > biggerDateDesconverted)
+      throw errors.inconsistentDates();
+  }
+
+  if (!origin && !destination && biggerDate && smallerDate) {
+    const flights = await flightRepository.selectFlightsByDate(
+      biggerDate,
+      smallerDate
+    );
+    return flights.rows;
+  }
+
+  if (origin && destination && biggerDate && smallerDate) {
+    const flights = await flightRepository.selectFlightsByAllParams(
+      origin,
+      destination,
+      smallerDate,
+      biggerDate
+    );
+    return flights.rows;
+  }
+
+  if (!origin && !destination && !biggerDate && !smallerDate) {
+    const flights = await flightRepository.selectFlights();
+    return flights.rows;
+  }
+}
+
 export const flightService = { createFlight };

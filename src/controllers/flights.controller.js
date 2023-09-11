@@ -3,19 +3,28 @@ import { errors } from "../errors/errors.js";
 import { flightService } from "../services/flights.service.js";
 
 async function registerFlight(req, res) {
-  if (!req.body) throw errors.incompleteData();
-  await flightService.createFlight(req.body);
+  const { origin, destination, date } = req.body;
+
+  if (!origin || !destination || !date) throw errors.incompleteData()();
+  if (origin === destination) throw errors.conflictCities();
+
+  await flightService.createFlight({ origin, destination, date });
+
   res.sendStatus(httpStatus.CREATED);
 }
 
 async function getFlights(req, res) {
-  try {
-    //await
-    res.status(200).send("getFlights");
-  } catch (err) {
-    console.log(err);
-    return res.sendStatus(500);
-  }
+  const { origin, destination } = req.query;
+  const smallerDate = req.query["smaller-date"];
+  const biggerDate = req.query["bigger-date"];
+
+  const flights = await flightService.selectFlights(
+    origin,
+    destination,
+    biggerDate,
+    smallerDate
+  );
+  res.status(200).send(flights);
 }
 
 export const flightsController = { registerFlight, getFlights };
